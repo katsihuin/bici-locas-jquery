@@ -48,9 +48,10 @@ function firstToUpperCase(_texto)
 }
 
 /* Valida Nombre*/
+
 function validateName()
 {
-	var inputName = document.getElementById("commentName");
+	var inputName = $('#commentName');
 	var name =  inputName.value;
 
 	inputName.value = firstToUpperCase(name);
@@ -75,7 +76,7 @@ function validateName()
 /* Valida Apellido*/
 function validateLastName()
 {
-	var inputLastName = document.getElementById("commentLastName");
+	var inputLastName = $('#commentLastName');
 	var lastName =  inputLastName.value;
 
 	inputLastName.value = firstToUpperCase(lastName);
@@ -100,7 +101,7 @@ function validateLastName()
 /* Valida Email*/
 function validateEmail()
 {
-	var email = document.getElementById("commentEmail").value;
+	var email = $('#commentEmail').val;
 	if (email.length == 0)
 	{
 		producePrompt("Correo Electrónico es requerido", "commentEmailPrompt", "red");
@@ -121,7 +122,7 @@ function validateEmail()
 /* Valida Contraseña*/
 function validatePassword()
 {
-	var password = document.getElementById("commentPassword").value;
+	var password = $('#commentPassword').val;
 	if (password.length == 0)
 	{
 		producePrompt("Contraseña es requerida", "commentPasswordPrompt", "red");
@@ -147,7 +148,7 @@ function validatePassword()
 /* Valida Tipo de bici*/
 function validateTipoBici()
 {
-	var tipo = document.getElementById("commentTipo").value;
+	var tipo = $('#commentTipo').val;
 	if (tipo == 0)
 	{
 		producePrompt("Seleccione un tipo de bici de las opciones presentadas", "commentTipoPrompt", "white");
@@ -163,7 +164,7 @@ function validateTipoBici()
 /* Valida formato de nombre de usuario en Twitter*/
 function validateTwitter()
 {
-	var twitter = document.getElementById("commentTwitter").value;
+	var twitter = $('#commentTwitter').val;
 	if (twitter.length == 0) 
 	{
 		jsShow("commentTwitterPrompt");
@@ -186,7 +187,7 @@ function validateTwitter()
 /* Valida Informacion */
 function validateInfo()
 {
-	var info = document.getElementById("commentInfo").value;
+	var info = $('#commentInfo').val;
 	if (info.checked==true) 
 	{
 		producePrompt("¡Gracias, estaremos en contacto contigo muy pronto!", "commentInfoPrompt", "green");
@@ -195,50 +196,42 @@ function validateInfo()
 }
 
 
-function firstToUpperCase(_texto)
-{
-	var result = _texto[0].toUpperCase() + _texto.slice(1);
-	var mayus = result.split(" ");
-	
-	console.log(result.split(" "));
-	return result;
-}
 
 // Cargar primero el DOM para ejecutar 
 document.addEventListener ('DOMContentLoaded', 
 	function showTooltip()
 {
-	var inputs = document.getElementsByTagName("input");
+	var inputs = $('input');
 	for (var i=0; i<inputs.length; i++)
 	{
 		// Prueba para ver si el span existe primero
-		if (inputs[i].parentNode.getElementsByTagName("span")[0]) 
+		if (inputs.parent()$('span')[0]) 
 		{
 			// Si el span existe, en el enfoque mostrar el texto del span
-			inputs[i].onfocus = function () 
+			inputs.onfocus = function () 
 			{
-				this.parentNode.getElementsByTagName("span")[0].style.display = "inline";
+				this.parent()$('span')[0].style.display = "inline";
 			}
 			// Cuando se retira el foco del span, ocultar el texto del span
-			inputs[i].onblur = function () 
+			inputs.onblur = function () 
 			{
-				this.parentNode.getElementsByTagName("span")[0].style.display = "none";
+				this.parent()$('span')[0].style.display = "none";
 			}
 		}
 	}
 	// Repita las mismas pruebas que las de arriba para select
-	var selects = document.getElementsByTagName("select");
+	var selects = $('select');
 	for (var k=0; k<selects.length; k++)
 	{
-		if (selects[k].parentNode.getElementsByTagName("span")[0]) 
+		if (selects[k].parentNode.$('span')[0]) 
 		{
 			selects[k].onfocus = function () 
 			{
-				this.parentNode.getElementsByTagName("span")[0].style.display = "inline";
+				this.parentNode.$('span')[0].style.display = "inline";
 			}
 			selects[k].onblur = function () 
 			{
-				this.parentNode.getElementsByTagName("span")[0].style.display = "none";
+				this.parentNode.$('span')[0].style.display = "none";
 			}
 		}
 	}
