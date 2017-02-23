@@ -1,3 +1,10 @@
+/*$(document).on("ready", init);
+
+function init()
+{
+	$('#btnSend').on("click", validateForm);
+}*/
+
 function validateForm()
 {
 	/* validar los campos requeridos */
@@ -27,24 +34,26 @@ function jsHide(id)
 	document.getElementById(id).style.display="none";
 }
 
-
-
 /* Envia Mensaje al usuario*/
-var colores =   ["rojo", "amarillo"];
-var colores = {valid:"verde", error:"rojo", normal:"blanco"};
-var estilo = {color:"coc", colorFondo:"dds", opacity:1};
-
 function producePrompt(message, promptLocation, color)
 {
 	document.getElementById(promptLocation).innerHTML = message;
 	document.getElementById(promptLocation).style.color = color;
 }
 //Convierte la primera letra de una palabra en Mayuscula
-function firstToUpperCase(_texto)
-{
-	var result = _texto[0].toUpperCase() + _texto.slice(1);
-	var mayus = result.split(" ");
-	return result;
+function capitalize() {
+    $(this[0]).keyup(function(event) {
+        var box = event.target;
+        var txt = $(this).val();
+        var stringStart = box.selectionStart;
+        var stringEnd = box.selectionEnd;
+        $(this).val(txt.replace(/^(.)|(\s|\-)(.)/g, function($word) {
+            return $word.toUpperCase();
+        }));
+        box.setSelectionRange(stringStart , stringEnd);
+    });
+
+   return this;
 }
 
 /* Valida Nombre*/
@@ -52,16 +61,16 @@ function firstToUpperCase(_texto)
 function validateName()
 {
 	var inputName = $('#commentName');
-	var name =  inputName.value;
-
-	inputName.value = firstToUpperCase(name);
-
+	var name =  inputName.val;
+	inputName.val = capitalize(name); //Convierte primera letra en mayuscula
+	var nameReg = /^[A-Z][a-z]*[a-zA-Z]$/;
+	
 	if (name.length == 0)
 	{
 		producePrompt("Tu Nombre es requerido", "commentNamePrompt", "red");
 		return false;
 	}
-	else if (!name.match(/^[A-Z][a-z]*[a-zA-Z]$/)) 
+	else if (!nameReg.test(name)) 
 	{
 		producePrompt("Compruebe que su Nombre contenga SOLO caracteres de la A-Z", "commentNamePrompt", "red");
 		return false;
@@ -77,16 +86,18 @@ function validateName()
 function validateLastName()
 {
 	var inputLastName = $('#commentLastName');
-	var lastName =  inputLastName.value;
+	var lastName =  inputLastName.val;
 
-	inputLastName.value = firstToUpperCase(lastName);
+	inputLastName.val = capitalize(lastName);
+
+	var lastNameReg = /^[A-Z][a-z]*[a-zA-Z]$/;
 
 	if (lastName.length == 0)
 	{
 		producePrompt("Tu Apellido es requerido", "commentLastNamePrompt", "red");
 		return false;
 	}
-	else if (!lastName.match(/^[A-Z][a-z]*[a-zA-Z]$/)) 
+	else if (!lastNameReg.test(lastName)) 
 	{
 		producePrompt("Compruebe que su Apellido contenga SOLO caracteres de la A-Z", "commentLastNamePrompt", "red");
 		return false;
@@ -102,12 +113,13 @@ function validateLastName()
 function validateEmail()
 {
 	var email = $('#commentEmail').val;
+	var emailReg = /^[A-Za-z\._\-0-9]*[@][A-Za-z]*[\.][a-z]{2,4}$/;
 	if (email.length == 0)
 	{
 		producePrompt("Correo Electrónico es requerido", "commentEmailPrompt", "red");
 		return false;
 	}
-	else if (!email.match(/^[A-Za-z\._\-0-9]*[@][A-Za-z]*[\.][a-z]{2,4}$/)) 
+	else if (!emailReg.test(email)) 
 	{
 		producePrompt("Compruebe que el Correo Electrónico contenga un formato válido. Ej: name@domain.com", "commentEmailPrompt", "red");
 		return false;
@@ -123,12 +135,14 @@ function validateEmail()
 function validatePassword()
 {
 	var password = $('#commentPassword').val;
+	var passwordReg = /.{6,}/;
+
 	if (password.length == 0)
 	{
 		producePrompt("Contraseña es requerida", "commentPasswordPrompt", "red");
 		return false;
 	}
-	else if (!password.match(/.{6,}/)) 
+	else if (!passwordReg.test(password)) 
 	{
 		producePrompt("Compruebe que la contraseña tenga al menos 6 caracteres", "commentPasswordPrompt", "red");
 		return false;
@@ -198,43 +212,27 @@ function validateInfo()
 
 
 // Cargar primero el DOM para ejecutar 
+
 document.addEventListener ('DOMContentLoaded', 
 	function showTooltip()
-{
-	var inputs = $('input');
-	for (var i=0; i<inputs.length; i++)
 	{
-		// Prueba para ver si el span existe primero
-		if (inputs.parent()$('span')[0]) 
-		{
-			// Si el span existe, en el enfoque mostrar el texto del span
-			inputs.onfocus = function () 
-			{
-				this.parent()$('span')[0].style.display = "inline";
-			}
-			// Cuando se retira el foco del span, ocultar el texto del span
-			inputs.onblur = function () 
-			{
-				this.parent()$('span')[0].style.display = "none";
-			}
-		}
-	}
-	// Repita las mismas pruebas que las de arriba para select
-	var selects = $('select');
-	for (var k=0; k<selects.length; k++)
-	{
-		if (selects[k].parentNode.$('span')[0]) 
-		{
-			selects[k].onfocus = function () 
-			{
-				this.parentNode.$('span')[0].style.display = "inline";
-			}
-			selects[k].onblur = function () 
-			{
-				this.parentNode.$('span')[0].style.display = "none";
-			}
-		}
-	}
 
-addEventListener(showTooltip);
+	$("div").each(function (i) { 
+		 var input = $(this).children("input").first(); //if(i==0) alert(input);
+		 var span = $(this).children("span").first(); 
+		 if(span) { //if(i==0) //alert(span);
+			 input.focus(function(){ span.css({ "display":"inline" })  });
+			 input.blur(function(){ span.css({ "display":"none" }) });
+		}
+	})
+	$("div").each(function (i) { 
+		 var select = $(this).children("select").first(); //if(i==0) alert(input);
+		 var span = $(this).children("span").first(); 
+		 if(span) { //if(i==0) //alert(span);
+			 select.focus(function(){ span.css({ "display":"inline" })  });
+			 select.blur(function(){ span.css({ "display":"none" }) });
+		}
+	})
+
+addEventListener('DOMContentLoaded', showTooltip);
 });
